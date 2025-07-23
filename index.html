@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Voice Assistant</title>
-  <script src="https://unpkg.com/@vapi-ai/client-sdk"></script>
+  <title>Talk to My Assistant</title>
+  <script src="https://unpkg.com/@vapi-ai/web"></script>
   <style>
     body {
       margin: 0;
@@ -52,31 +52,48 @@
   </style>
 </head>
 <body>
-  <h1>🧠 Talk to your AI Assistant</h1>
-  <button id="start-btn">🎙️ Start Talking</button>
-  <div id="response"></div>
+  <h1>🎙️ AI Voice Assistant</h1>
+  <button id="start-btn">Talk to Assistant</button>
+  <div id="response">Press the button to begin</div>
 
   <script>
     const assistantId = "40681d0d-9e84-405a-968d-fb1c017d1fc7";
     const publicKey = "16db3dc3-84fb-436e-96fc-c5cac4409d69";
 
-    const vapi = window.vapi.createClient({ assistantId, publicKey });
+    const vapi = window.vapi.default.createClient({
+      assistantId,
+      publicKey,
+    });
 
     const startButton = document.getElementById("start-btn");
     const responseDiv = document.getElementById("response");
 
-    startButton.addEventListener("click", () => {
-      vapi.start();
-      startButton.textContent = "🎧 Listening...";
+    let isStarted = false;
+
+    startButton.addEventListener("click", async () => {
+      if (!isStarted) {
+        await vapi.start();
+        isStarted = true;
+        startButton.textContent = "Listening...";
+      } else {
+        await vapi.stop();
+        isStarted = false;
+        startButton.textContent = "Talk to Assistant";
+        responseDiv.textContent = "Stopped.";
+      }
+    });
+
+    vapi.on("transcript", (transcript) => {
+      responseDiv.textContent = "You said: " + transcript;
     });
 
     vapi.on("response", (text) => {
-      responseDiv.textContent = text;
-      startButton.textContent = "🎙️ Talk Again";
+      responseDiv.textContent = "Assistant: " + text;
     });
 
-    vapi.on("status", (status) => {
-      if (status === "idle") startButton.textContent = "🎙️ Talk Again";
+    vapi.on("error", (err) => {
+      responseDiv.textContent = "Error: " + err.message;
+      startButton.textContent = "Try Again";
     });
   </script>
 </body>
