@@ -6,6 +6,9 @@ This project showcases the development and implementation of an advanced AI voic
 
 Riley is built upon the robust Vapi AI platform, a powerful developer tool for creating sophisticated voice AI agents. This platform enables Riley to engage in natural conversations, make and receive phone calls, and seamlessly integrate with existing systems and APIs. The primary objective of this project was to develop an intelligent agent capable of handling customer inquiries, providing support, and enhancing the overall customer experience for Smart Methods Company.
 
+![Screenshot from the website](Assistant_test.jpg)
+
+
 ## Key Technologies and Components
 
 ### AI Model: GPT-4o Cluster Model
